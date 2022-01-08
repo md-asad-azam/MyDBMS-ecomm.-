@@ -1,6 +1,6 @@
 //to handle error in request body i.e. name
 
-exports.catchAsyncError = (theFunc)=>(req, res, next) => {
+module.exports = (theFunc) => (req, res, next) => {
     Promise.resolve(theFunc(req, res, next)).catch(next)
 }
 
