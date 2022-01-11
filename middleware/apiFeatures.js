@@ -1,9 +1,9 @@
-class apiFeatures{
-    constructor(query, queryStr){
+class apiFeatures {
+    constructor(query, queryStr) {
         this.query = query
         this.queryStr = queryStr || {}
     }
-    search(){
+    search() {
         const keyword = this.queryStr.keyword ? {
             name: {
                 $regex: this.queryStr.keyword,
@@ -13,8 +13,8 @@ class apiFeatures{
         this.query = this.query.find(keyword)
         return this
     }
-    filter(){
-        const queryCopy = {...this.queryStr}
+    filter() {
+        const queryCopy = { ...this.queryStr }
         const removeFields = ["keyword", "page", "limit"]
 
         removeFields.forEach(key => {
@@ -25,6 +25,13 @@ class apiFeatures{
         queryString = queryString.replace(/\b(lt|lte|gt|gte)\b/gi, (key) => `$${key}`)
         this.query = this.query.find(JSON.parse(queryString))
 
+        return this
+    }
+    pagination() {
+        const currentPage = Number(this.queryStr.page) || 1
+        const skip = resultPerPage * (currentPage - 1)
+
+        this.query = this.query.limit(resultPerPage).skip(skip)
         return this
     }
 }
