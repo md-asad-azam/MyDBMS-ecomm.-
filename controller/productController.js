@@ -1,6 +1,7 @@
 const productCollection = require("../models/productModel")
 const catchAsyncError = require("../Error/asyncError")
 const ErrorHandler = require("../Error/errorHandler")
+const apiFeatures = require("../middleware/apiFeatures")
 
 // CREATE
 exports.createProduct = catchAsyncError(async (req, res, next) => {
@@ -15,7 +16,10 @@ exports.createProduct = catchAsyncError(async (req, res, next) => {
 
 // READ
 exports.getAllProducts = catchAsyncError(async (req, res, next) => {
-    const product = await productCollection.find()
+
+    const apiFeature = new apiFeatures(productCollection.find(), req.query).search()
+
+    const product = await apiFeature.query
     if(!product)
     {
         return next(new ErrorHandler("No product available to diplay", 404))
