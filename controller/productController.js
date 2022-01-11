@@ -17,10 +17,11 @@ exports.createProduct = catchAsyncError(async (req, res, next) => {
 // READ
 exports.getAllProducts = catchAsyncError(async (req, res, next) => {
 
-    const apiFeature = new apiFeatures(productCollection.find(), req.query).search()
+    const apiFeature = new apiFeatures(productCollection.find(), req.query)
+    .search().filter()
 
     const product = await apiFeature.query
-    if(!product)
+    if(!product || product.length == 0)
     {
         return next(new ErrorHandler("No product available to diplay", 404))
     }
